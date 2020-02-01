@@ -47,8 +47,8 @@ class ModelApp(Flask):
         print('HIT HERE')
         global sent_model
         global w2v_model
-        if not sent_model:
-            sent_model = pickle.load(open('ml_code/model.sav', 'rb'))
+        # if not sent_model:
+        #     sent_model = pickle.load(open('ml_code/model.sav', 'rb'))
         print('finished loading sentence model')
  
         # if not w2v_model:
@@ -92,7 +92,7 @@ def add_entry():
         #day=datetime.now().day
         #print(year)
         #https://api.mongodb.com/python/current/examples/datetimes.html
-        sentiment=get_sentiment(journal)
+        # sentiment=get_sentiment(journal)
         
         entry = {"date":datetime.utcnow(), "text":journal, "sentiment":sentiment}
         global collection
