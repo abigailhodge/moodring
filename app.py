@@ -28,8 +28,6 @@ try:
 except:
 	print("connection failure")
 
-
-
 try:
 	client = MongoClient("mongodb+srv://sjhbluhm:123password!@cluster0-o0tfo.mongodb.net/test?retryWrites=true&w=majority")
 	client.server_info()
@@ -97,10 +95,6 @@ def add_entry():
         global collection
         collection.insert_one(entry)
 
-
-        results = collection.find({})
-        for result in results:
-        	print(result)
 
         return render_template("index.html", plot=bar)
 
