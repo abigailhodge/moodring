@@ -7,6 +7,7 @@ from flask_pymongo import PyMongo
 
 import plotly
 import plotly.graph_objs as go
+import plotly.express as px
 import pandas as pd
 import json
 import numpy as np
@@ -72,7 +73,13 @@ def get_sentiment(entry):
         print('negative entry', entry)
 
 
-sample_df = df = pd.DataFrame({'id': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 'tag': [1, -1, -1, 1, 1, 1, -1, 1, 1, -1]})
+sample_df = df = pd.DataFrame(
+    {'id': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+    'review': ["mediocre", "not great", "wonderful", "best day ever to exist", "i am feeling sad", "hello", "another message", "hi", "this is the ninth message", "finally complete"],
+    'tag': [1, -1, -1, 1, 1, 1, -1, 1, 1, -1],
+    'date': ["YYYY-mm-ddTHH:MM:ss", "YYYY-mm-ddTHH:MM:ss", "YYYY-mm-ddTHH:MM:ss", "YYYY-mm-ddTHH:MM:ss", "YYYY-mm-ddTHH:MM:ss", "YYYY-mm-ddTHH:MM:ss", "YYYY-mm-ddTHH:MM:ss", "YYYY-mm-ddTHH:MM:ss", "YYYY-mm-ddTHH:MM:ss", "YYYY-mm-ddTHH:MM:ss"]
+    }
+)
 
 def create_plot():
     data = [
@@ -82,6 +89,28 @@ def create_plot():
         )
     ]
 
-    graphJSON = json.dumps(data, cls=plotly.utils.PlotlyJSONEncoder)
+    # graph option 1: color gradient scatterplot, color represents review length, position represents tag
+    fig1 = px.scatter(
+        sample_df, 
+        x="id", 
+        y=sample_df['review'].str.len(), 
+        color=sample_df['review'].str.len()
+    )
 
+    # graph option 2: polar barplot w/ height representing review length, color representing tag, hover shows text
+    fig2 = go.Figure(
+        go.Barpolar(
+            r = sample_df['review'].str.len(),
+            theta = np.arange(0, 360, 360/sample_df['id'].count()),
+            text = sample_df['review'],
+            width = 20,
+            marker_color=sample_df['tag'].map({-1:"#4037b8", 1:"#f0cb46"}),
+            marker_line_color="black",
+            marker_line_width=2,
+            opacity=0.8,
+            hoverinfo='text'
+        )
+    )
+
+    graphJSON = json.dumps(fig2, cls=plotly.utils.PlotlyJSONEncoder)
     return graphJSON
