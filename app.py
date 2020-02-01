@@ -10,7 +10,7 @@ import os
 
 cluster = MongoClient("mongodb+srv://sjhbluhm:<123password!>@cluster0-o0tfo.mongodb.net/test?retryWrites=true&w=majority")
 db = cluster["moodring"]
-collection = db["moodring""]
+collection = db["moodring"]
 
 w2v_model = None
 sent_model = None
@@ -32,9 +32,9 @@ class ModelApp(Flask):
 app = ModelApp(__name__)
 app.run()
 app.config["TEMPLATES_AUTO_RELOAD"]
-app.config["MONGO_URI"] = "mongodb://localhost:27017/db"
+app.config["MONGO_URI"] = "mongodb+srv://sjhbluhm:<123password!>@cluster0-o0tfo.mongodb.net/test?retryWrites=true&w=majority"
 mongo = PyMongo(app)
-client = MongoClient("mongodb://127.0.0.1:27017")
+client = cluster
 
 
 @app.route("/")
