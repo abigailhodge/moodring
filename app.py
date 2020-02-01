@@ -55,12 +55,16 @@ client = MongoClient("mongodb://127.0.0.1:27017")
 def hello():
     bar = create_plot()
     
+    arr_entries = []
     global collection
-    results = collection.find({})
-    for result in results:
-        	print(result)
-        	
-    return render_template('index.html', plot=bar)
+
+    for result in collection.find({}).sort("date",-1):
+    		i = result["date"]
+    		j = result["text"]
+    		k = result["sentiment"]
+    		arr_entries.append([i,j,k])
+    
+    return render_template('index.html', plot=bar, arr_entries=arr_entries)
 
 
 @app.route("/add_entry", methods=["GET", "POST"])
@@ -72,21 +76,14 @@ def add_entry():
         return render_template("addentry.html")
     else:
         journal = request.form.get("journal")
-        #get_sentiment(journal)
         bar = create_plot()
-        return render_template("index.html", plot=bar)
-
-        year=(datetime.now() - timedelta(hours=5)).year
-        month=(datetime.now() - timedelta(hours=5)).month
-        day=(datetime.now() - timedelta(hours=5)).month
-
         sentiment=get_sentiment(journal)
         
-        entry = {"date":day, "text":journal, "sentiment":sentiment}
+        entry = {"date":datetime.utcnow(), "text":journal, "sentiment":sentiment}
         global collection
         collection.insert_one(entry)
         
-        return render_template("index.html", month=month, day=day, year=year)
+        return render_template("index.html", plot=bar)
 
 
 def get_sentiment(entry):
@@ -104,7 +101,7 @@ def get_sentiment(entry):
         print('positive entry', entry)
     else:
         print('negative entry', entry)
-    return result
+    return int(result)
 
 
 sample_df = df = pd.DataFrame(
