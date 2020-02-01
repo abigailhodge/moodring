@@ -12,6 +12,8 @@ import os
 try:
 	client = MongoClient("mongodb+srv://sjhbluhm:123password!@cluster0-o0tfo.mongodb.net/test?retryWrites=true&w=majority")
 	client.server_info()
+	db = client["moodring"]
+	collection = db["moodring"]
 	print("connected to Mongodb server")
 except:
 	print("connection failure")
@@ -52,6 +54,12 @@ client = MongoClient("mongodb://127.0.0.1:27017")
 @app.route("/")
 def hello():
     bar = create_plot()
+    
+    global collection
+    results = collection.find({})
+    for result in results:
+        	print(result)
+        	
     return render_template('index.html', plot=bar)
 
 
@@ -74,14 +82,9 @@ def add_entry():
 
         sentiment=get_sentiment(journal)
         
-        entry = {"date":day, "text":journal}
-        global client
-        db = client["moodring"]
-        collection = db["moodring"]
+        entry = {"date":day, "text":journal, "sentiment":sentiment}
+        global collection
         collection.insert_one(entry)
-        results = collection.find({})
-        for result in results:
-        	print(result)
         
         return render_template("index.html", month=month, day=day, year=year)
 
