@@ -13,10 +13,65 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 h1 {
-	font-size: 30px;
+	font-size: 50px;
 	font-variant: small-caps;
+}
+
+p {
+	font-size: 18px;
+}
+
+img {
+	max-width: 100%;
+	height: auto;
 }
 
 .header {
 	text-align: center;
+}
+
+
+.nav-item {
+	float: left;
+	display: inline;
+	margin: 0;
+	padding-left: 4px;
+	padding-right: 4px;
+	padding-top: 0px;
+	padding-bottom: 0px;
+}
+
+.navbar-light {
+	background-color: #e1f2fb;
+	margin: 0px;
+	width: 100%;
+	padding: 10px;
+}
+
+.nav-link {
+	margin: 0;
+	padding-left: 20px;
+	padding-right: 20px
+	text-decoration: none;
+	border-radius: 0px;
+	letter-spacing: 1px;
+	text-align: center;
+}
+
+.nav-link:hover {
+	color: #ffffff;
+}
+
+a {
+	color: black;
+	font-size: 20px;
+}
+
+.page-body {
+	margin-right: auto;
+	margin-left: auto;
+	text-align: center;
+	background-color: #f1f9f9;
+	padding-top: 50px;
+	padding-bottom: 50px;
 }
