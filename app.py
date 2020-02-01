@@ -5,6 +5,8 @@ from numpy import array, mean
 import pickle
 from datetime import datetime, timedelta
 from flask_pymongo import PyMongo
+from pymongo import MongoClient
+import os
 
 w2v_model = None
 sent_model = None
@@ -26,8 +28,9 @@ class ModelApp(Flask):
 app = ModelApp(__name__)
 app.run()
 app.config["TEMPLATES_AUTO_RELOAD"]
-app.config["MONGO_URI"] = "mongodb://localhost:27017/myDatabase"
+app.config["MONGO_URI"] = "mongodb://localhost:27017/db"
 mongo = PyMongo(app)
+client = MongoClient("mongodb://127.0.0.1:27017")
 
 
 @app.route("/")
@@ -45,8 +48,13 @@ def add_entry():
         return render_template("addentry.html")
     else:
         journal = request.form.get("journal")
+
+        year=(datetime.now() - timedelta(hours=5)).year
+        month=(datetime.now() - timedelta(hours=5)).month
+        day=(datetime.now() - timedelta(hours=5)).month
+
         get_sentiment(journal)
-        return render_template("index.html")
+        return render_template("index.html", month=month, day=day, year=year)
 
 
 def get_sentiment(entry):
