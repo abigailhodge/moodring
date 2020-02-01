@@ -8,6 +8,10 @@ from flask_pymongo import PyMongo
 from pymongo import MongoClient
 import os
 
+cluster = MongoClient("mongodb+srv://sjhbluhm:<123password!>@cluster0-o0tfo.mongodb.net/test?retryWrites=true&w=majority")
+db = cluster["moodring"]
+collection = db["moodring""]
+
 w2v_model = None
 sent_model = None
 
