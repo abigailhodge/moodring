@@ -1,9 +1,16 @@
+
 from flask import Flask, render_template, redirect, request, session
 from gensim.models import KeyedVectors
 from numpy import array, mean
 import pickle
 from datetime import datetime, timedelta
 from flask_pymongo import PyMongo
+from pymongo import MongoClient
+import os
+
+cluster = MongoClient("mongodb+srv://sjhbluhm:<123password!>@cluster0-o0tfo.mongodb.net/test?retryWrites=true&w=majority")
+db = cluster["moodring"]
+collection = db["moodring"]
 
 import plotly
 import plotly.graph_objs as go
@@ -32,8 +39,8 @@ class ModelApp(Flask):
 app = ModelApp(__name__)
 app.run()
 app.config["TEMPLATES_AUTO_RELOAD"]
-app.config["MONGO_URI"] = "mongodb://localhost:27017/myDatabase"
-mongo = PyMongo(app)
+
+client = MongoClient("mongodb://127.0.0.1:27017")
 
 
 @app.route("/")
@@ -55,6 +62,21 @@ def add_entry():
         bar = create_plot()
         return render_template("index.html", plot=bar)
 
+        year=(datetime.now() - timedelta(hours=5)).year
+        month=(datetime.now() - timedelta(hours=5)).month
+        day=(datetime.now() - timedelta(hours=5)).month
+
+        sentiment=get_sentiment(journal)
+        
+        entry = {"date":day, "text":journal, "sentiment":sentiment}
+        collection.insert_one(entry)
+        
+        results = collection.find({})
+        for result in results:
+        	print(result)
+        
+        return render_template("index.html", month=month, day=day, year=year)
+
 
 def get_sentiment(entry):
     global w2v_model
@@ -71,6 +93,7 @@ def get_sentiment(entry):
         print('positive entry', entry)
     else:
         print('negative entry', entry)
+    return result
 
 
 sample_df = df = pd.DataFrame(
@@ -114,3 +137,4 @@ def create_plot():
 
     graphJSON = json.dumps(fig2, cls=plotly.utils.PlotlyJSONEncoder)
     return graphJSON
+

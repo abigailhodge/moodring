@@ -4,3 +4,6 @@ Flask-Session==0.3.1
 gunicorn
 gensim
 numpy
+Flask-PyMongo
+sklearn
+dnspython
