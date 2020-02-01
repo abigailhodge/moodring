@@ -12,6 +12,7 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
 	
+	
 </head>
 <body>
 	<div class="header mt-4">
@@ -34,14 +35,10 @@
 	</div>
 	<div class="page-body section1">
 		<h2>Current World Mood</h2>
-		<div class="svg">
-			<svg viewBox="0 0 400 400" preserveAspectRatio="xMidYMin">
-				<rect width="75%" height="75%" rx="20" ry="20" x="50" y="50"></rect>
-			</svg>
-		</div>
 	</div>
 	<div class="page-body section2">
 		<h3>Recent Entries</h3>
 	</div>
+	<script src="{{url_for('static', filename='myScript.js')}}"></script>
 </body>
 </html>
