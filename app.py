@@ -86,8 +86,6 @@ def add_entry():
         return render_template("addentry.html")
     else:
         journal = request.form.get("journal")
-<<<<<<< HEAD
-        
         #year=datetime.now().year
         #month=datetime.now().month
         #day=datetime.now().day
