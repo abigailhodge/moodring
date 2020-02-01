@@ -7,8 +7,14 @@ from datetime import datetime, timedelta
 from flask_pymongo import PyMongo
 from pymongo import MongoClient
 import os
+import plotly
+import plotly.graph_objs as go
+import plotly.express as px
+import pandas as pd
+import json
+import numpy as np
 
-<<<<<<< HEAD
+
 # https://stackoverflow.com/questions/53682647/mongodb-atlas-authentication-failed-on-python
 
 client=MongoClient("mongodb+srv://sjhbluhm:123password!@cluster0-o0tfo.mongodb.net/test?retryWrites=true&w=majority")
@@ -21,7 +27,7 @@ try:
 except:
 	print("connection failure")
 
-=======
+
 
 try:
 	client = MongoClient("mongodb+srv://sjhbluhm:123password!@cluster0-o0tfo.mongodb.net/test?retryWrites=true&w=majority")
@@ -32,13 +38,6 @@ try:
 except:
 	print("connection failure")
 
-import plotly
-import plotly.graph_objs as go
-import plotly.express as px
-import pandas as pd
-import json
-import numpy as np
->>>>>>> db0778a1ba4b41f313bc41fc21df5c303858f7f6
 
 w2v_model = None
 sent_model = None
