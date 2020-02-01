@@ -8,9 +8,18 @@ from flask_pymongo import PyMongo
 from pymongo import MongoClient
 import os
 
-cluster = MongoClient("mongodb+srv://sjhbluhm:<123password!>@cluster0-o0tfo.mongodb.net/test?retryWrites=true&w=majority")
-db = cluster["moodring"]
+# https://stackoverflow.com/questions/53682647/mongodb-atlas-authentication-failed-on-python
+
+client=MongoClient("mongodb+srv://sjhbluhm:123password!@cluster0-o0tfo.mongodb.net/test?retryWrites=true&w=majority")
+#db = client.test
+db = client["moodring"]
 collection = db["moodring"]
+client.server_info()
+try:
+    print("connected to Mongodb server")
+except:
+	print("connection failure")
+
 
 w2v_model = None
 sent_model = None
@@ -33,7 +42,7 @@ app = ModelApp(__name__)
 app.run()
 app.config["TEMPLATES_AUTO_RELOAD"]
 
-client = MongoClient("mongodb://127.0.0.1:27017")
+#client = MongoClient("mongodb://127.0.0.1:27017")
 
 
 @app.route("/")
@@ -51,21 +60,23 @@ def add_entry():
         return render_template("addentry.html")
     else:
         journal = request.form.get("journal")
-
-        year=(datetime.now() - timedelta(hours=5)).year
-        month=(datetime.now() - timedelta(hours=5)).month
-        day=(datetime.now() - timedelta(hours=5)).month
-
+        
+        #year=datetime.now().year
+        #month=datetime.now().month
+        #day=datetime.now().day
+        #print(year)
+        #https://api.mongodb.com/python/current/examples/datetimes.html
         sentiment=get_sentiment(journal)
         
-        entry = {"date":day, "text":journal, "sentiment":sentiment}
+        entry = {"date":datetime.utcnow(), "text":journal, "sentiment":sentiment}
+
         collection.insert_one(entry)
         
         results = collection.find({})
         for result in results:
         	print(result)
         
-        return render_template("index.html", month=month, day=day, year=year)
+        return render_template("index.html", month=month, d=day, year=year)
 
 
 def get_sentiment(entry):
