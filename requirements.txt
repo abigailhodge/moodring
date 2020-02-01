@@ -7,3 +7,4 @@ numpy
 Flask-PyMongo
 sklearn
 dnspython
+plotly
