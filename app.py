@@ -32,9 +32,6 @@ class ModelApp(Flask):
 app = ModelApp(__name__)
 app.run()
 app.config["TEMPLATES_AUTO_RELOAD"]
-app.config["MONGO_URI"] = "mongodb+srv://sjhbluhm:<123password!>@cluster0-o0tfo.mongodb.net/test?retryWrites=true&w=majority"
-mongo = PyMongo(app)
-client = cluster
 
 
 @app.route("/")
@@ -57,7 +54,15 @@ def add_entry():
         month=(datetime.now() - timedelta(hours=5)).month
         day=(datetime.now() - timedelta(hours=5)).month
 
-        get_sentiment(journal)
+        sentiment=get_sentiment(journal)
+        
+        entry = {"date":day, "text":journal, "sentiment":sentiment}
+        collection.insert_one(entry)
+        
+        results = collection.find({})
+        for result in results:
+        	print(result)
+        
         return render_template("index.html", month=month, day=day, year=year)
 
 
@@ -72,7 +77,4 @@ def get_sentiment(entry):
     vector_array = array(sentiment_list)
     avg_sent = mean(vector_array, axis=0).reshape(1, -1)
     result = sent_model.predict(avg_sent)[0]
-    if result == 1:
-        print('positive entry', entry)
-    else:
-        print('negative entry', entry)
+    return result
