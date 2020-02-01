@@ -65,7 +65,7 @@ def hello():
     		k = result["sentiment"]
     		arr_entries.append([i,j,k])
     
-    return render_template('index.html', plot=bar, arr_entries=arr_entries)
+    return render_template('index.html', plot=bar, arr_entries=arr_entries, index="active",entries="inactive")
 
 
 @app.route("/add_entry", methods=["GET", "POST"])
