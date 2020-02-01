@@ -80,7 +80,6 @@ def hello():
     return render_template('index.html', plot=bar, arr_entries=arr_entries, index="active",entries="inactive", todaysentiment=todaysentiment)
 
 
-
 @app.route("/add_entry", methods=["GET", "POST"])
 
 # default goal_display is current time, at EST. takes in form input if posted
