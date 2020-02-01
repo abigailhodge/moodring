@@ -35,16 +35,10 @@ class ModelApp(Flask):
         if not sent_model:
             sent_model = pickle.load(open('ml_code/model.sav', 'rb'))
         print('finished loading sentence model')
-<<<<<<< HEAD
-        #if not w2v_model:
-        #    w2v_model = KeyedVectors.load_word2vec_format('ml_code/GoogleNews-vectors-negative300.bin', binary=True)
-        #print('finished loading w2v')
-=======
  
         if not w2v_model:
             w2v_model = KeyedVectors.load_word2vec_format('ml_code/GoogleNews-vectors-negative300.bin', binary=True)
         print('finished loading w2v')
->>>>>>> 90113c4c0cc0c1abc57ff62c8dbb838f520b32e9
         super(ModelApp, self).run(host=host, port=port, debug=debug, load_dotenv=load_dotenv, **options)
 
 
