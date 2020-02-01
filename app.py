@@ -1,4 +1,5 @@
 from flask import Flask, render_template, redirect, request, session
+from datetime import datetime, timedelta
 
 app = Flask(__name__)
 
@@ -12,3 +13,13 @@ def hello():
 
 if __name__ == "__main__":
     app.run()
+
+@app.route("/add_entry", methods=["GET", "POST"])
+
+# default goal_display is current time, at EST. takes in form input if posted
+def add_entry():
+    if request.method == "GET":
+        return render_template("addentry.html")
+    else:
+        journal = request.form.get("journal")
+        return render_template("index.html")
