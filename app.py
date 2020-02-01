@@ -8,9 +8,13 @@ from flask_pymongo import PyMongo
 from pymongo import MongoClient
 import os
 
-cluster = MongoClient("mongodb+srv://sjhbluhm:<123password!>@cluster0-o0tfo.mongodb.net/test?retryWrites=true&w=majority")
-db = cluster["moodring"]
-collection = db["moodring"]
+
+try:
+	client = MongoClient("mongodb+srv://sjhbluhm:123password!@cluster0-o0tfo.mongodb.net/test?retryWrites=true&w=majority")
+	client.server_info()
+	print("connected to Mongodb server")
+except:
+	print("connection failure")
 
 w2v_model = None
 sent_model = None
@@ -24,10 +28,12 @@ class ModelApp(Flask):
         if not sent_model:
             sent_model = pickle.load(open('ml_code/model.sav', 'rb'))
         print('finished loading sentence model')
+ 
         if not w2v_model:
             w2v_model = KeyedVectors.load_word2vec_format('ml_code/GoogleNews-vectors-negative300.bin', binary=True)
         print('finished loading w2v')
         super(ModelApp, self).run(host=host, port=port, debug=debug, load_dotenv=load_dotenv, **options)
+
 
 app = ModelApp(__name__)
 app.run()
@@ -58,9 +64,11 @@ def add_entry():
 
         sentiment=get_sentiment(journal)
         
-        entry = {"date":day, "text":journal, "sentiment":sentiment}
+        entry = {"date":day, "text":journal}
+        global client
+        db = client["moodring"]
+        collection = db["moodring"]
         collection.insert_one(entry)
-        
         results = collection.find({})
         for result in results:
         	print(result)
