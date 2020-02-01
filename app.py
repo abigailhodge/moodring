@@ -1,9 +1,13 @@
 from flask import Flask, render_template, redirect, request, session
 from datetime import datetime, timedelta
+from flask_pymongo import PyMongo
+
 
 app = Flask(__name__)
 
 app.config["TEMPLATES_AUTO_RELOAD"]
+app.config["MONGO_URI"] = "mongodb://localhost:27017/myDatabase"
+mongo = PyMongo(app)
 
 
 @app.route("/")
