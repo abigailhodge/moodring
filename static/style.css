@@ -26,6 +26,19 @@ img {
 	height: auto;
 }
 
+svg {
+	display: block;
+	margin: auto;
+	width: 75%;
+}
+
+rect {
+	fill: blue;
+	stroke-width: 5;
+	fill-opacity: 0.1;
+	stroke-opacity: 0.9;
+}
+
 .header {
 	text-align: center;
 }
@@ -71,7 +84,10 @@ a {
 	margin-right: auto;
 	margin-left: auto;
 	text-align: center;
-	background-color: #f1f9f9;
 	padding-top: 50px;
 	padding-bottom: 50px;
+}
+
+.section1 {
+	background-color: #f1f9f9;
 }
