@@ -11,7 +11,8 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
-	
+	<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js"></script>
 </head>
 <body>
 	<div class="header mt-4">
@@ -39,9 +40,23 @@
 				<rect width="75%" height="75%" rx="20" ry="20" x="50" y="50"></rect>
 			</svg>
 		</div>
+		<div class="graph">
+			<div class="row">
+				<div class="col-md-6">
+					<div class="chart" id="bargraph">
+						<script type="text/javascript">
+							//@ts-ignore
+							var graphs = {{plot|safe}};
+							Plotly.plot('bargraph',graphs,{});
+						</script>
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
 	<div class="page-body section2">
 		<h3>Recent Entries</h3>
 	</div>
+	<script src="{{url_for('static', filename='myScript.js')}}"></script>
 </body>
 </html>
