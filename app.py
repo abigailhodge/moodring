@@ -5,6 +5,12 @@ import pickle
 from datetime import datetime, timedelta
 from flask_pymongo import PyMongo
 
+import plotly
+import plotly.graph_objs as go
+import pandas as pd
+import json
+import numpy as np
+
 w2v_model = None
 sent_model = None
 
@@ -17,9 +23,9 @@ class ModelApp(Flask):
         if not sent_model:
             sent_model = pickle.load(open('ml_code/model.sav', 'rb'))
         print('finished loading sentence model')
-        if not w2v_model:
-            w2v_model = KeyedVectors.load_word2vec_format('ml_code/GoogleNews-vectors-negative300.bin', binary=True)
-        print('finished loading w2v')
+        #if not w2v_model:
+        #    w2v_model = KeyedVectors.load_word2vec_format('ml_code/GoogleNews-vectors-negative300.bin', binary=True)
+        #print('finished loading w2v')
         super(ModelApp, self).run(host=host, port=port, debug=debug, load_dotenv=load_dotenv, **options)
 
 app = ModelApp(__name__)
@@ -31,8 +37,8 @@ mongo = PyMongo(app)
 
 @app.route("/")
 def hello():
-    hi = "hello"
-    return render_template('index.html', hi=hi)
+    bar = create_plot()
+    return render_template('index.html', plot=bar)
 
 
 @app.route("/add_entry", methods=["GET", "POST"])
@@ -44,8 +50,9 @@ def add_entry():
         return render_template("addentry.html")
     else:
         journal = request.form.get("journal")
-        get_sentiment(journal)
-        return render_template("index.html")
+        #get_sentiment(journal)
+        bar = create_plot()
+        return render_template("index.html", plot=bar)
 
 
 def get_sentiment(entry):
@@ -63,3 +70,18 @@ def get_sentiment(entry):
         print('positive entry', entry)
     else:
         print('negative entry', entry)
+
+
+sample_df = df = pd.DataFrame({'id': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 'tag': [1, -1, -1, 1, 1, 1, -1, 1, 1, -1]})
+
+def create_plot():
+    data = [
+        go.Bar(
+            x=sample_df['id'], # assign x as the dataframe column 'x'
+            y=sample_df['tag']
+        )
+    ]
+
+    graphJSON = json.dumps(data, cls=plotly.utils.PlotlyJSONEncoder)
+
+    return graphJSON
