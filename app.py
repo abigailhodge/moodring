@@ -36,8 +36,8 @@ class ModelApp(Flask):
             sent_model = pickle.load(open('ml_code/model.sav', 'rb'))
         print('finished loading sentence model')
  
-        if not w2v_model:
-            w2v_model = KeyedVectors.load_word2vec_format('ml_code/GoogleNews-vectors-negative300.bin', binary=True)
+        # if not w2v_model:
+        #     w2v_model = KeyedVectors.load_word2vec_format('ml_code/GoogleNews-vectors-negative300.bin', binary=True)
         print('finished loading w2v')
         super(ModelApp, self).run(host=host, port=port, debug=debug, load_dotenv=load_dotenv, **options)
 
@@ -72,7 +72,7 @@ def add_entry():
         month=(datetime.now() - timedelta(hours=5)).month
         day=(datetime.now() - timedelta(hours=5)).month
 
-        sentiment=get_sentiment(journal)
+        # sentiment=get_sentiment(journal)
         
         entry = {"date":day, "text":journal}
         global client
