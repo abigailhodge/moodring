@@ -7,21 +7,37 @@ from datetime import datetime, timedelta
 from flask_pymongo import PyMongo
 from pymongo import MongoClient
 import os
-
-
-try:
-	client = MongoClient("mongodb+srv://sjhbluhm:123password!@cluster0-o0tfo.mongodb.net/test?retryWrites=true&w=majority")
-	client.server_info()
-	print("connected to Mongodb server")
-except:
-	print("connection failure")
-
 import plotly
 import plotly.graph_objs as go
 import plotly.express as px
 import pandas as pd
 import json
 import numpy as np
+
+
+# https://stackoverflow.com/questions/53682647/mongodb-atlas-authentication-failed-on-python
+
+client=MongoClient("mongodb+srv://sjhbluhm:123password!@cluster0-o0tfo.mongodb.net/test?retryWrites=true&w=majority")
+#db = client.test
+db = client["moodring"]
+collection = db["moodring"]
+client.server_info()
+try:
+    print("connected to Mongodb server")
+except:
+	print("connection failure")
+
+
+
+try:
+	client = MongoClient("mongodb+srv://sjhbluhm:123password!@cluster0-o0tfo.mongodb.net/test?retryWrites=true&w=majority")
+	client.server_info()
+	db = client["moodring"]
+	collection = db["moodring"]
+	print("connected to Mongodb server")
+except:
+	print("connection failure")
+
 
 w2v_model = None
 sent_model = None
@@ -46,12 +62,18 @@ app = ModelApp(__name__)
 app.run()
 app.config["TEMPLATES_AUTO_RELOAD"]
 
-client = MongoClient("mongodb://127.0.0.1:27017")
+#client = MongoClient("mongodb://127.0.0.1:27017")
 
 
 @app.route("/")
 def hello():
     bar = create_plot()
+    
+    global collection
+    results = collection.find({})
+    for result in results:
+        	print(result)
+        	
     return render_template('index.html', plot=bar)
 
 
@@ -64,26 +86,28 @@ def add_entry():
         return render_template("addentry.html")
     else:
         journal = request.form.get("journal")
-        #get_sentiment(journal)
         bar = create_plot()
-        return render_template("index.html", plot=bar)
-
-        year=(datetime.now() - timedelta(hours=5)).year
-        month=(datetime.now() - timedelta(hours=5)).month
-        day=(datetime.now() - timedelta(hours=5)).month
 
         # sentiment=get_sentiment(journal)
         
-        entry = {"date":day, "text":journal}
-        global client
-        db = client["moodring"]
-        collection = db["moodring"]
+        #year=datetime.now().year
+        #month=datetime.now().month
+        #day=datetime.now().day
+        #print(year)
+        #https://api.mongodb.com/python/current/examples/datetimes.html
+        sentiment=get_sentiment(journal)
+        
+        entry = {"date":datetime.utcnow(), "text":journal, "sentiment":sentiment}
+        global collection
         collection.insert_one(entry)
+
+
         results = collection.find({})
         for result in results:
         	print(result)
-        
-        return render_template("index.html", month=month, day=day, year=year)
+
+        return render_template("index.html", plot=bar)
+
 
 
 def get_sentiment(entry):
