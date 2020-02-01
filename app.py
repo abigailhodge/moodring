@@ -85,6 +85,7 @@ def add_entry():
         return render_template("addentry.html")
     else:
         journal = request.form.get("journal")
+        bar = create_plot()
         #year=datetime.now().year
         #month=datetime.now().month
         #day=datetime.now().day
@@ -93,30 +94,15 @@ def add_entry():
         sentiment=get_sentiment(journal)
         
         entry = {"date":datetime.utcnow(), "text":journal, "sentiment":sentiment}
-
+        global collection
         collection.insert_one(entry)
-        
+
+
         results = collection.find({})
         for result in results:
         	print(result)
-        
-        return render_template("index.html", month=month, d=day, year=year)
 
-        #get_sentiment(journal)
-        bar = create_plot()
         return render_template("index.html", plot=bar)
-
-        year=(datetime.now() - timedelta(hours=5)).year
-        month=(datetime.now() - timedelta(hours=5)).month
-        day=(datetime.now() - timedelta(hours=5)).month
-
-        sentiment=get_sentiment(journal)
-        
-        entry = {"date":day, "text":journal, "sentiment":sentiment}
-        global collection
-        collection.insert_one(entry)
-        
-        return render_template("index.html", month=month, day=day, year=year)
 
 
 
