@@ -1,20 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	<title>Mood Ring</title>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<script src="https://d3js.org/d3.v5.min.js"></script>
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
-	<link href='https://fonts.googleapis.com/css?family=Open Sans' rel='stylesheet'>
-	<link rel="stylesheet" type="text/css" href="/static/style.css">
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
-	<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js"></script>
-</head>
-<body>
+{% extends "layout.html" %}
+{% block title %}
+Mood Ring
+{% endblock %}
+{% block main %}
 	<div class="header mt-4">
 		<h1>Mood Ring</h1>
 		<nav class="navbar navbar-expand-sm navbar-light">
@@ -33,30 +21,11 @@
 			</div>  
 		</nav>
 	</div>
-	<div class="page-body section1">
+	<div class="page-body">
 		<h2>Current World Mood</h2>
-		<div class="svg">
-			<svg viewBox="0 0 400 400" preserveAspectRatio="xMidYMin">
-				<rect width="75%" height="75%" rx="20" ry="20" x="50" y="50"></rect>
-			</svg>
-		</div>
-		<div class="graph">
-			<div class="row">
-				<div class="col-md-6">
-					<div class="chart" id="bargraph">
-						<script type="text/javascript">
-							//@ts-ignore
-							var graphs = {{plot|safe}};
-							Plotly.plot('bargraph',graphs,{});
-						</script>
-					</div>
-				</div>
-			</div>
-		</div>
+		<svg><circle style="fill: #69b3a2" stroke="black" cx=50 cy=50 r=40></circle>
+        </svg>
+        <p>
 	</div>
-	<div class="page-body section2">
-		<h3>Recent Entries</h3>
-	</div>
-	<script src="{{url_for('static', filename='myScript.js')}}"></script>
-</body>
-</html>
+
+{% endblock %}
