@@ -37,12 +37,12 @@ class ModelApp(Flask):
         print('HIT HERE')
         global sent_model
         global w2v_model
-        # if not sent_model:
-        #     sent_model = pickle.load(open('ml_code/model.sav', 'rb'))
+        if not sent_model:
+            sent_model = pickle.load(open('ml_code/model.sav', 'rb'))
         print('finished loading sentence model')
  
-        # if not w2v_model:
-        #     w2v_model = KeyedVectors.load_word2vec_format('ml_code/GoogleNews-vectors-negative300.bin', binary=True)
+        if not w2v_model:
+            w2v_model = KeyedVectors.load_word2vec_format('ml_code/GoogleNews-vectors-negative300.bin', binary=True)
         print('finished loading w2v')
         super(ModelApp, self).run(host=host, port=port, debug=debug, load_dotenv=load_dotenv, **options)
 
@@ -94,13 +94,12 @@ def get_sentiment(entry):
     for word in word_list:
         if word in w2v_model:
             sentiment_list.append(w2v_model[word])
-    vector_array = array(sentiment_list)
-    avg_sent = mean(vector_array, axis=0).reshape(1, -1)
-    result = sent_model.predict(avg_sent)[0]
-    if result == 1:
-        print('positive entry', entry)
+    if len(sentiment_list) > 0:
+    	vector_array = array(sentiment_list)
+    	avg_sent = mean(vector_array, axis=0).reshape(1, -1)
+    	result = sent_model.predict(avg_sent)[0]
     else:
-        print('negative entry', entry)
+    	result = 0
     return int(result)
 
 
