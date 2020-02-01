@@ -16,20 +16,10 @@ import numpy as np
 
 # https://stackoverflow.com/questions/53682647/mongodb-atlas-authentication-failed-on-python
 mongo_uri = os.environ.get('MONGO_URL')
-client=MongoClient(mongo_uri)
-#db = client.test
-db = client["moodring"]
-cluster = MongoClient(mongo_uri)
-db = cluster["moodring"]
-collection = db["moodring"]
-client.server_info()
-try:
-    print("connected to Mongodb server")
-except:
-	print("connection failure")
+
 
 try:
-	client = MongoClient("mongodb+srv://sjhbluhm:123password!@cluster0-o0tfo.mongodb.net/test?retryWrites=true&w=majority")
+	client = MongoClient(mongo_uri)
 	client.server_info()
 	db = client["moodring"]
 	collection = db["moodring"]
@@ -66,12 +56,16 @@ app.config["TEMPLATES_AUTO_RELOAD"]
 def hello():
     bar = create_plot()
     
+    arr_entries = []
     global collection
-    results = collection.find({})
-    for result in results:
-        	print(result)
-        	
-    return render_template('index.html', plot=bar)
+
+    for result in collection.find({}).sort("date",-1):
+    		i = result["date"]
+    		j = result["text"]
+    		k = result["sentiment"]
+    		arr_entries.append([i,j,k])
+    
+    return render_template('index.html', plot=bar, arr_entries=arr_entries)
 
 
 @app.route("/add_entry", methods=["GET", "POST"])
@@ -84,20 +78,12 @@ def add_entry():
     else:
         journal = request.form.get("journal")
         bar = create_plot()
-        #year=datetime.now().year
-        #month=datetime.now().month
-        #day=datetime.now().day
-        #print(year)
-        #https://api.mongodb.com/python/current/examples/datetimes.html
         sentiment=get_sentiment(journal)
         
         entry = {"date":datetime.utcnow(), "text":journal, "sentiment":sentiment}
         global collection
         collection.insert_one(entry)
-
-
         return render_template("index.html", plot=bar)
-
 
 
 def get_sentiment(entry):
@@ -108,14 +94,13 @@ def get_sentiment(entry):
     for word in word_list:
         if word in w2v_model:
             sentiment_list.append(w2v_model[word])
-    vector_array = array(sentiment_list)
-    avg_sent = mean(vector_array, axis=0).reshape(1, -1)
-    result = sent_model.predict(avg_sent)[0]
-    if result == 1:
-        print('positive entry', entry)
+    if len(sentiment_list) > 0:
+    	vector_array = array(sentiment_list)
+    	avg_sent = mean(vector_array, axis=0).reshape(1, -1)
+    	result = sent_model.predict(avg_sent)[0]
     else:
-        print('negative entry', entry)
-    return result
+    	result = 0
+    return int(result)
 
 
 sample_df = df = pd.DataFrame(

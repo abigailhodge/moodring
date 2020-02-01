@@ -14,5 +14,5 @@ handlers:
 
 
 env_variables:
-  MONGO_URL: 'mongodb+srv://sjhbluhm:<123password!>@cluster0-o0tfo.mongodb.net/test?retryWrites=true&w=majority'
+  MONGO_URL: 'mongodb+srv://sjhbluhm:123password!@cluster0-o0tfo.mongodb.net/test?retryWrites=true&w=majority'
   W2V_BUCKET: 'w2v-files'

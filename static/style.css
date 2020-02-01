@@ -124,3 +124,12 @@ textarea {
 	color: white;
 }
 
+.recent-entries {
+	margin: auto;
+	text-align: left;
+}
+
+.recent-entries p {
+	background-color: rgba(255, 255, 255, 0.8);
+	padding: 15px;
+}
