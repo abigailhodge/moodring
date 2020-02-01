@@ -7,10 +7,19 @@ from datetime import datetime, timedelta
 from flask_pymongo import PyMongo
 from pymongo import MongoClient
 import os
+import plotly
+import plotly.graph_objs as go
+import plotly.express as px
+import pandas as pd
+import json
+import numpy as np
+
+# https://stackoverflow.com/questions/53682647/mongodb-atlas-authentication-failed-on-python
+mongo_uri = os.environ.get('MONGO_URL')
 
 
 try:
-	client = MongoClient("mongodb+srv://sjhbluhm:123password!@cluster0-o0tfo.mongodb.net/test?retryWrites=true&w=majority")
+	client = MongoClient(mongo_uri)
 	client.server_info()
 	db = client["moodring"]
 	collection = db["moodring"]
@@ -18,12 +27,6 @@ try:
 except:
 	print("connection failure")
 
-import plotly
-import plotly.graph_objs as go
-import plotly.express as px
-import pandas as pd
-import json
-import numpy as np
 
 w2v_model = None
 sent_model = None
@@ -34,12 +37,12 @@ class ModelApp(Flask):
         print('HIT HERE')
         global sent_model
         global w2v_model
-        if not sent_model:
-            sent_model = pickle.load(open('ml_code/model.sav', 'rb'))
+        # if not sent_model:
+        #     sent_model = pickle.load(open('ml_code/model.sav', 'rb'))
         print('finished loading sentence model')
  
-        if not w2v_model:
-            w2v_model = KeyedVectors.load_word2vec_format('ml_code/GoogleNews-vectors-negative300.bin', binary=True)
+        # if not w2v_model:
+        #     w2v_model = KeyedVectors.load_word2vec_format('ml_code/GoogleNews-vectors-negative300.bin', binary=True)
         print('finished loading w2v')
         super(ModelApp, self).run(host=host, port=port, debug=debug, load_dotenv=load_dotenv, **options)
 
@@ -47,8 +50,6 @@ class ModelApp(Flask):
 app = ModelApp(__name__)
 app.run()
 app.config["TEMPLATES_AUTO_RELOAD"]
-
-client = MongoClient("mongodb://127.0.0.1:27017")
 
 
 @app.route("/")
@@ -82,7 +83,6 @@ def add_entry():
         entry = {"date":datetime.utcnow(), "text":journal, "sentiment":sentiment}
         global collection
         collection.insert_one(entry)
-        
         return render_template("index.html", plot=bar)
 
 
