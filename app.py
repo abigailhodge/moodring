@@ -79,7 +79,7 @@ def hello():
     		sum += result["sentiment"]
     		entries += 1
     if entries > 0:
-    	todaysentiment = sum/(entries-1)
+    	todaysentiment = sum/entries
     else:
     	todaysentiment = 0
     print(todaysentiment)
