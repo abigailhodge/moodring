@@ -19,8 +19,14 @@ h1 {
 
 p {
 	font-size: 18px;
-	background-color: rgba(255, 255, 255, 0.8);
 	padding: 20px;
+	text-align: left;
+}
+
+.date-text {
+	font-size: 10px;
+	padding-bottom: 0px;
+	margin-bottom: 0px;
 }
 
 img {
@@ -126,3 +132,15 @@ textarea {
 	color: white;
 }
 
+.one-entry {
+	background-color: rgba(255, 255, 255, 0.8);
+}
+
+.negative {
+	background-color: #c9b6e4;
+	color: white;
+}
+
+.positive {
+	background-color: #f6eec7;
+}

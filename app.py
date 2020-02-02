@@ -137,36 +137,73 @@ sample_df = df = pd.DataFrame(
 )
 
 def create_plot():
-    data = [
-        go.Bar(
-            x=sample_df['id'], # assign x as the dataframe column 'x'
-            y=sample_df['tag']
-        )
-    ]
-
-    # graph option 1: color gradient scatterplot, color represents review length, position represents tag
-    fig1 = px.scatter(
-        sample_df, 
-        x="id", 
-        y=sample_df['review'].str.len(), 
-        color=sample_df['review'].str.len()
-    )
-
-    # graph option 2: polar barplot w/ height representing review length, color representing tag, hover shows text
-    fig2 = go.Figure(
+    
+    # graph option 1: polar barplot w/ binary color, height represents string length
+    fig1 = go.Figure(
         go.Barpolar(
             r = sample_df['review'].str.len(),
             theta = np.arange(0, 360, 360/sample_df['id'].count()),
             text = sample_df['review'],
             width = 20,
-            marker_color=sample_df['tag'].map({-1:"#4037b8", 1:"#f0cb46"}),
+            marker_color=sample_df['tag'].map({-1:"#d67499", 1:"#83ccaa"}),
             marker_line_color="black",
             marker_line_width=2,
             opacity=0.8,
-            hoverinfo='text'
+            hoverinfo='text',
+            showlegend=False,
+        )
+    )
+    fig1.update_layout(
+        title='World Mood',
+        plot_bgcolor='rgb(10,10,10)',
+        
+        polar = dict(
+        radialaxis = dict(range=[0, 30], showticklabels=False, ticks=''),
+        angularaxis = dict(showticklabels=False, ticks='')
         )
     )
 
-    graphJSON = json.dumps(fig2, cls=plotly.utils.PlotlyJSONEncoder)
+    # graph option 2: polar barplot w/ binary height, color represents string length
+    fig2 = px.bar_polar(
+        sample_df,
+        r=sample_df['tag'].map({-1:1, 1:2}),
+        theta=np.arange(0, 360, 360/sample_df['id'].count()),
+        color=sample_df['review'].str.len(),
+        color_discrete_sequence=px.colors.sequential.Plasma_r,
+        hover_name=sample_df['review'],
+        #hover_data=none
+        )
+    fig2.update_layout(
+        title='World Mood',
+        plot_bgcolor='rgb(10,10,10)',
+        
+        polar = dict(
+        radialaxis = dict(range=[0, 2.5], showticklabels=False, ticks=''),
+        angularaxis = dict(showticklabels=False, ticks='')
+        )
+    )
+
+    # graph option 3: scatterplot w/ binary shape and radius placement, color represents string length
+    fig3 = px.scatter_polar(
+        sample_df,
+        r=sample_df['tag'].map({-1:1, 1:2}),
+        theta=np.arange(0, 360, 360/sample_df['id'].count()),
+        color=sample_df['review'].str.len(),
+        symbol=sample_df['tag'],
+        color_discrete_sequence=px.colors.sequential.Plasma_r,
+        hover_name='review'
+        )
+    fig3.update_traces(marker=dict(size=25))
+    fig3.update_layout(
+        title='World Mood',
+        plot_bgcolor='rgb(10,10,10)',
+        
+        polar = dict(
+        radialaxis = dict(range=[0, 2.5], showticklabels=False, ticks=''),
+        angularaxis = dict(showticklabels=False, ticks='')
+        )
+    )
+
+    graphJSON = json.dumps(fig1, cls=plotly.utils.PlotlyJSONEncoder)
     return graphJSON
 
