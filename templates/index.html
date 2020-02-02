@@ -1,10 +1,20 @@
-{% extends "layout.html" %}
-
-{% block title %}
-    World Mood
-{% endblock %}
-
-{% block main %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Mood Ring</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<script src="https://d3js.org/d3.v5.min.js"></script>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+	<link href='https://fonts.googleapis.com/css?family=Open Sans' rel='stylesheet'>
+	<link rel="stylesheet" type="text/css" href="/static/style.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+	<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js"></script>
+</head>
+<body>
 	<div class="header mt-4">
 		<h1>Mood Ring</h1>
 		<nav class="navbar navbar-expand-sm navbar-light">
@@ -44,16 +54,6 @@
 	<div class="page-body section2">
 		<h3>Recent Entries</h3>
 		<div class="row">
-			<div class="col-md-4"></div>
-			<div class="col-md-4 justify-content-center text-center">
-				<ul class="legend mb-4 pb-5">
-					<li><span id="positive-key"></span>Positive</li>
-					<li><span id="negative-key"></span>Negative</li>
-				</ul>
-			</div>
-			<div class="col-md-4"></div>
-		</div>
-		<div class="row">
 			<div class="col-md-3"></div>
 			<div id="recent-entries" class="col-md-6"></div>
 			<div class="col-md-3"></div>
@@ -82,4 +82,5 @@
 		</script>
 	</div>
 	<script src="{{url_for('static', filename='myScript.js')}}"></script>
-{% endblock %}
+</body>
+</html>
