@@ -144,3 +144,33 @@ textarea {
 .positive {
 	background-color: #f6eec7;
 }
+
+.legend { 
+	margin: auto;
+	list-style: none; 
+}
+.legend li { 
+	float: none;
+	font-size: 18px;
+	display: inline-block; 
+	margin-right: 10px; 
+}
+
+.legend span { 
+	border: 1px solid #ccc; 
+	float: left; 
+	width: 20px; 
+	height: 18px; 
+	margin: 4px; 
+	margin-left: 8px;
+}
+
+#positive-key {
+	background-color: #f6eec7;
+}
+
+#negative-key {
+	background-color: #c9b6e4;
+}
+
+
