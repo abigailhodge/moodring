@@ -1,4 +1,5 @@
 runtime: python37
+entrypoint: gunicorn -b 0.0.0.0:8080 app:app
 
 handlers:
   # This configures Google App Engine to serve the files in the app's static
@@ -11,8 +12,3 @@ handlers:
   # the entire handlers section) when there are no static files defined.
 - url: /.*
   script: auto
-
-
-env_variables:
-#  MONGO_URL: 'mongodb+srv://sjhbluhm:123password!@cluster0-o0tfo.mongodb.net/test?retryWrites=true&w=majority'
-  W2V_BUCKET: 'w2v-files'

@@ -47,7 +47,7 @@ class ModelApp(Flask):
         print('finished loading sentence model')
  
         if not w2v_model:
-            w2v_model = KeyedVectors.load_word2vec_format('ml_code/GoogleNews-vectors-negative300.bin', binary=True)
+            w2v_model = pickle.load(open('ml_code/vectors.sav', 'rb'))
         print('finished loading w2v')
         super(ModelApp, self).run(host=host, port=port, debug=debug, load_dotenv=load_dotenv, **options)
 
@@ -65,21 +65,24 @@ def hello():
 	#create array of previous entries newest to oldest
     arr_entries = []
     global collection
+
     for result in collection.find({}).sort("date",-1):
-            i = result['date']
-            j = result["text"]
-            k = result["sentiment"]
-            arr_entries.append(JournalEntry(i, j, k))
+    		i = result["date"]
+    		j = result["text"]
+    		k = result["sentiment"]
+    		arr_entries.append([i,j,k])
     
     #find the average of past day's sentiment
-    sum =  0
-    entries = 1
+    sum = entries = 0
     datetimestamp=datetime.utcnow()
     results = collection.find({"day":datetimestamp.strftime("%d %b %Y ")})
     for result in results:
     		sum += result["sentiment"]
     		entries += 1
-    todaysentiment = sum/(entries-1)
+    if entries > 0:
+    	todaysentiment = sum/entries
+    else:
+    	todaysentiment = 0
     print(todaysentiment)
     
     return render_template('index.html', plot=bar, arr_entries=arr_entries, index="active",entries="inactive", todaysentiment=todaysentiment)
