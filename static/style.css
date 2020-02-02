@@ -135,3 +135,12 @@ textarea {
 .one-entry {
 	background-color: rgba(255, 255, 255, 0.8);
 }
+
+.negative {
+	background-color: #c9b6e4;
+	color: white;
+}
+
+.positive {
+	background-color: #f6eec7;
+}

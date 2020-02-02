@@ -147,7 +147,6 @@ def create_plot():
             opacity=0.8,
             hoverinfo='text',
             showlegend=False,
-            colorscale="Cividis"
         )
     )
     fig1.update_layout(
@@ -201,6 +200,6 @@ def create_plot():
         )
     )
 
-    graphJSON = json.dumps(fig2, cls=plotly.utils.PlotlyJSONEncoder)
+    graphJSON = json.dumps(fig1, cls=plotly.utils.PlotlyJSONEncoder)
     return graphJSON
 
