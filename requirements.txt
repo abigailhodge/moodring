@@ -8,3 +8,4 @@ Flask-PyMongo
 sklearn
 dnspython
 plotly
+pandas
