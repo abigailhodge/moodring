@@ -67,6 +67,7 @@ def hello():
         k = result["sentiment"]
         arr_entries.append([i, j, k])
     
+    
     #find the average of past day's sentiment
     sum = entries = 0
     datetimestamp=datetime.utcnow()
@@ -80,6 +81,27 @@ def hello():
     	todaysentiment = 0
     print(todaysentiment)
     
+    
+    #find the average of the past 12 hours
+    hraverage = []
+    now = datetime.utcnow()
+    for i in range(24):
+    	avrg = 0
+    	sum = 0
+    	entries = 0
+    	then = now - timedelta(hours=i)
+    	results = collection.find({"hour":then.strftime("%H "),"day":then.strftime("%d "),"month":then.strftime("%m "), "year":then.strftime("%Y ")})
+    	for result in results:
+    		sum += result["sentiment"]
+    		entries += 1
+    	if entries > 0:
+    		avrg = sum/entries
+    	else:
+    		avrg = 0
+    	hraverage.append([avrg])
+    print(hraverage)
+    	
+    	
     return render_template('index.html', plot=bar, arr_entries=arr_entries, index="active",entries="inactive", todaysentiment=todaysentiment)
 
 
