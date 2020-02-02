@@ -200,6 +200,6 @@ def create_plot():
         )
     )
 
-    graphJSON = json.dumps(fig1, cls=plotly.utils.PlotlyJSONEncoder)
+    graphJSON = json.dumps(fig2, cls=plotly.utils.PlotlyJSONEncoder)
     return graphJSON
 
