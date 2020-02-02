@@ -67,10 +67,10 @@ def hello():
     global collection
 
     for result in collection.find({}).sort("date",-1):
-    		i = result["date"]
-    		j = result["text"]
-    		k = result["sentiment"]
-    		arr_entries.append([i,j,k])
+        i = result["date"]
+        j = result["text"]
+        k = result["sentiment"]
+        arr_entries.append([i, j, k])
     
     #find the average of past day's sentiment
     sum = entries = 0
