@@ -1,3 +1,4 @@
+pymongo
 Flask==1.0.2
 Jinja2==2.10.3
 Flask-Session==0.3.1

@@ -40,21 +40,16 @@ sent_model = None
 class ModelApp(Flask):
     def run(self, host=None, port=None, debug=None, load_dotenv=True, **options):
         print('HIT HERE')
-        global sent_model
-        global w2v_model
-        if not sent_model:
-            sent_model = pickle.load(open('ml_code/model.sav', 'rb'))
-        print('finished loading sentence model')
- 
-        if not w2v_model:
-            w2v_model = pickle.load(open('ml_code/vectors.sav', 'rb'))
-        print('finished loading w2v')
+
         super(ModelApp, self).run(host=host, port=port, debug=debug, load_dotenv=load_dotenv, **options)
 
 
+
 app = ModelApp(__name__)
-app.run()
-app.config["TEMPLATES_AUTO_RELOAD"]
+if __name__ == '__main__':
+
+    app.run()
+    app.config["TEMPLATES_AUTO_RELOAD"]
 
 
 
@@ -96,6 +91,15 @@ def add_entry():
 
         return render_template("addentry.html")
     else:
+        global sent_model
+        global w2v_model
+        if not sent_model:
+            sent_model = pickle.load(open('ml_code/model.sav', 'rb'))
+            print('finished loading sentence model')
+
+        if not w2v_model:
+            w2v_model = pickle.load(open('ml_code/vectors.sav', 'rb'))
+            print('finished loading w2v')
         journal = request.form.get("journal")
         bar = create_plot()
         sentiment=get_sentiment(journal)
