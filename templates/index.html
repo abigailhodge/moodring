@@ -3,14 +3,14 @@
 Mood Ring
 {% endblock %}
 {% block content %}
-	<div class="page-body">
-		<h2>Current World Mood</h2>
-		<div class="graph">
-			<div class="row">
-				<div class="col-md-3"></div>
-				<div class="col-md-6 justify-content-center">
-					<div class="chart" id="bargraph">
-						<script type="text/javascript">
+<div class="page-body">
+	<h2>Current World Mood</h2>
+	<div class="graph">
+		<div class="row">
+			<div class="col-md-3"></div>
+			<div class="col-md-6 justify-content-center">
+				<div class="chart" id="bargraph">
+					<script type="text/javascript">
 							//@ts-ignore
 							var graphs = {{plot|safe}};
 							Plotly.plot('bargraph',graphs,{});
@@ -24,8 +24,9 @@ Mood Ring
 	<div class="page-body section2">
 		<h3>Recent Entries</h3>
 		<div id="recent-entries" class="col-6">
-	</div>
+		</div>
+
 	</div>
 	<script src="{{url_for('static', filename='myScript.js')}}"></script>
 
-{% endblock %}
+	{% endblock %}

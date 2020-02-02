@@ -15,11 +15,16 @@ import json
 import numpy as np
 
 # https://stackoverflow.com/questions/53682647/mongodb-atlas-authentication-failed-on-python
-mongo_uri = os.environ.get('MONGO_URL')
+#mongo_uri = os.environ.get('MONGO_URL')
 
+class JournalEntry:
+    def __init__(self, date, text, sentiment):
+        self.date = date
+        self.text = text
+        self.sentiment = sentiment
 
 try:
-	client = MongoClient(mongo_uri)
+	client = MongoClient("mongodb+srv://sjhbluhm:123password!@cluster0-o0tfo.mongodb.net/test?retryWrites=true&w=majority")
 	client.server_info()
 	db = client["moodring"]
 	collection = db["moodring"]
@@ -52,6 +57,7 @@ app.run()
 app.config["TEMPLATES_AUTO_RELOAD"]
 
 
+
 @app.route("/")
 def hello():
     bar = create_plot()
@@ -60,11 +66,10 @@ def hello():
     global collection
 
     for result in collection.find({}).sort("date",-1):
-    		i = result["date"]
-    		j = result["text"]
-    		k = result["sentiment"]
-    		arr_entries.append([i,j,k])
-    
+            i = result['date']
+            j = result["text"]
+            k = result["sentiment"]
+            arr_entries.append(JournalEntry(i, j, k))
     return render_template('index.html', plot=bar, arr_entries=arr_entries)
 
 
