@@ -1,22 +1,16 @@
 
-from flask import Flask, render_template, redirect, request, session
-from gensim.models import KeyedVectors
+from flask import Flask, render_template, request
 from numpy import array, mean
 import pickle
-from datetime import datetime, timedelta, date
-from flask_pymongo import PyMongo
+from datetime import datetime, timedelta
 from pymongo import MongoClient
-import os
 import plotly
-import plotly.graph_objs as go
 import plotly.express as px
 import pandas as pd
 import json
 import numpy as np
 from google.cloud import translate_v2 as translate
 
-# https://stackoverflow.com/questions/53682647/mongodb-atlas-authentication-failed-on-python
-#mongo_uri = os.environ.get('MONGO_URL')
 
 try:
 	client = MongoClient("mongodb+srv://sjhbluhm:123password!@cluster0-o0tfo.mongodb.net/test?retryWrites=true&w=majority")
@@ -32,16 +26,9 @@ w2v_model = None
 sent_model = None
 translate_client = None
 
-class ModelApp(Flask):
-    def run(self, host=None, port=None, debug=None, load_dotenv=True, **options):
-        print('HIT HERE')
-        super(ModelApp, self).run(host=host, port=port, debug=debug, load_dotenv=load_dotenv, **options)
 
-
-
-app = ModelApp(__name__)
+app = Flask(__name__)
 if __name__ == '__main__':
-
     app.run()
     app.config["TEMPLATES_AUTO_RELOAD"]
 
@@ -60,30 +47,23 @@ def hello():
         j = result["text"]
         k = result["sentiment"]
         arr_entries.append([i, j, k])
-    
-    
+
     #find the average of past day's sentiment
     sum = entries = 0
     datetimestamp=datetime.utcnow()
     results = collection.find({"day":datetimestamp.strftime("%d "),"month":datetimestamp.strftime("%m "), "year":datetimestamp.strftime("%Y ")})
     for result in results:
-    		sum += result["sentiment"]
-    		entries += 1
+        sum += result["sentiment"]
+        entries += 1
     if entries > 0:
     	todaysentiment = round(sum/entries,2)
-    else:
-    	todaysentiment = 0
-    print(todaysentiment)
-    
-    
 
-    	
-    	
+    else:
+        todaysentiment = 0
     return render_template('index.html', plot=bar, arr_entries=arr_entries, index="active",entries="inactive", todaysentiment=todaysentiment)
 
 
 @app.route("/add_entry", methods=["GET", "POST"])
-
 # default goal_display is current time, at EST. takes in form input if posted
 def add_entry():
     if request.method == "GET":
@@ -94,20 +74,19 @@ def add_entry():
         global translate_client
         if not sent_model:
             sent_model = pickle.load(open('ml_code/model.sav', 'rb'))
-            print('finished loading sentence model')
         if not w2v_model:
             w2v_model = pickle.load(open('ml_code/vectors.sav', 'rb'))
-            print('finished loading w2v')
         if not translate_client:
             translate_client = translate.Client()
         journal = request.form.get("journal")
-        bar = create_plot()
         sentiment=get_sentiment(journal)
         datetimestamp=datetime.utcnow()
-        entry = {"dtstamp":datetimestamp, "text":journal, "sentiment":sentiment, "hour":datetimestamp.strftime("%H "), "day":datetimestamp.strftime("%d "), "month":datetimestamp.strftime("%m "), "year":datetimestamp.strftime("%Y ")}
+        entry = {"dtstamp":datetimestamp, "text":journal, "sentiment":sentiment, "hour":datetimestamp.strftime("%H "),
+                 "day":datetimestamp.strftime("%d "), "month":datetimestamp.strftime("%m "),
+                 "year":datetimestamp.strftime("%Y ")}
         global collection
         collection.insert_one(entry)
-        return redirect("/")
+        return render_template("addentry.html")
 
 
 def get_sentiment(entry):
@@ -116,13 +95,12 @@ def get_sentiment(entry):
     global translate_client
     response = translate_client.translate(entry, target_language='en')
     translation = response['translatedText']
-    print(translation)
     word_list = translation.split()
     sentiment_list = []
     for word in word_list:
         lowercase_word = word.lower()
-        if lowercase_word  in w2v_model:
-            sentiment_list.append(w2v_model[lowercase_word ])
+        if lowercase_word in w2v_model:
+            sentiment_list.append(w2v_model[lowercase_word])
     if len(sentiment_list) > 0:
     	vector_array = array(sentiment_list)
     	avg_sent = mean(vector_array, axis=0).reshape(1, -1)
@@ -154,20 +132,19 @@ def create_plot():
     hraverage = []
     now = datetime.utcnow()
     for i in range(24):
-    	avrg = 0
-    	sum = 0
-    	entries = 0
-    	then = now - timedelta(hours=i)
-    	results = collection.find({"hour":then.strftime("%H "),"day":then.strftime("%d "),"month":then.strftime("%m "), "year":then.strftime("%Y ")})
-    	for result in results:
-    		sum += result["sentiment"]
-    		entries += 1
-    	if entries > 0:
-    		avrg = sum/entries
-    	else:
-    		avrg = 0
-    	hraverage.append(avrg)
-    print(hraverage)
+        sum = 0
+        entries = 0
+        then = now - timedelta(hours=i)
+        results = collection.find({"hour":then.strftime("%H "),"day":then.strftime("%d "),
+                                   "month":then.strftime("%m "), "year":then.strftime("%Y ")})
+        for result in results:
+            sum += result["sentiment"]
+            entries += 1
+        if entries > 0:
+            avrg = sum/entries
+        else:
+            avrg = 0
+        hraverage.append(avrg)
     avg_ids = range(24,0,-1)
     sample_df2 = df2 = pd.DataFrame(
         {'id': avg_ids,
