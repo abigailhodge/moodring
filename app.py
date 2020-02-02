@@ -18,12 +18,6 @@ from google.cloud import translate_v2 as translate
 # https://stackoverflow.com/questions/53682647/mongodb-atlas-authentication-failed-on-python
 #mongo_uri = os.environ.get('MONGO_URL')
 
-class JournalEntry:
-    def __init__(self, date, text, sentiment):
-        self.date = date
-        self.text = text
-        self.sentiment = sentiment
-
 try:
 	client = MongoClient("mongodb+srv://sjhbluhm:123password!@cluster0-o0tfo.mongodb.net/test?retryWrites=true&w=majority")
 	client.server_info()
@@ -76,7 +70,7 @@ def hello():
     		sum += result["sentiment"]
     		entries += 1
     if entries > 0:
-    	todaysentiment = sum/entries
+    	todaysentiment = round(sum/entries,2)
     else:
     	todaysentiment = 0
     print(todaysentiment)
@@ -186,14 +180,15 @@ def create_plot():
         r=sample_df2['average'].add(1),
         theta=np.arange(0, 360, 360/24),
         color=sample_df2['average'],
-        color_continuous_scale=['purple', 'yellow']
+        color_continuous_scale=["#352961", "#be9fe1", "#fdd365"],
+        range_color=[-1, 1]
         )
     fig2.update_layout(
         title='World Mood',
         plot_bgcolor='rgb(10,10,10)',
         
         polar = dict(
-        radialaxis = dict(range=[0,2.5], showticklabels=False, ticks=''),
+        radialaxis = dict(range=[0.5,2.2], showticklabels=False, ticks=''),
         angularaxis = dict(showticklabels=False, ticks='')
         )
     )
