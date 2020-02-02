@@ -53,6 +53,22 @@
 	</div>
 	<div class="page-body section2">
 		<h3>Recent Entries</h3>
+		<div class="row">
+			<div class="col-md-3"></div>
+			<div id="recent-entries" class="col-md-6"></div>
+			<div class="col-md-3"></div>
+		</div>
+		<script>
+			var entry_list = {{ arr_entries|tojson }};
+			console.log(typeof entry_list);
+			for(var i = 0; i < entry_list.length; i ++) {
+				var node = document.createElement("p");
+				var textnode = document.createTextNode(entry_list[i][1]);
+				node.appendChild(textnode);
+				document.getElementById("recent-entries").appendChild(node);
+				console.log(Object.getOwnPropertyNames(entry_list[i]));
+			}
+		</script>
 	</div>
 	<script src="{{url_for('static', filename='myScript.js')}}"></script>
 </body>
