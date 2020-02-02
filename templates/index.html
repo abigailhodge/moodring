@@ -62,10 +62,18 @@
 			var entry_list = {{ arr_entries|tojson }};
 			console.log(typeof entry_list);
 			for(var i = 0; i < entry_list.length; i ++) {
-				var node = document.createElement("p");
+				var newEntry = document.createElement('div');
+				newEntry.className = "one-entry";
+				var date = document.createElement("p");
+				date.className = "date-text"
+				var dateTextNode = document.createTextNode(entry_list[i][0]);
+				date.appendChild(dateTextNode);
+				var msg = document.createElement("p");
 				var textnode = document.createTextNode(entry_list[i][1]);
-				node.appendChild(textnode);
-				document.getElementById("recent-entries").appendChild(node);
+				msg.appendChild(textnode);
+				newEntry.appendChild(date);
+				newEntry.appendChild(msg);
+				document.getElementById("recent-entries").appendChild(newEntry);
 				console.log(Object.getOwnPropertyNames(entry_list[i]));
 			}
 		</script>
