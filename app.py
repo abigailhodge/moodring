@@ -13,6 +13,7 @@ import plotly.express as px
 import pandas as pd
 import json
 import numpy as np
+from google.cloud import translate_v2 as translate
 
 # https://stackoverflow.com/questions/53682647/mongodb-atlas-authentication-failed-on-python
 #mongo_uri = os.environ.get('MONGO_URL')
@@ -35,12 +36,11 @@ except:
 
 w2v_model = None
 sent_model = None
-
+translate_client = None
 
 class ModelApp(Flask):
     def run(self, host=None, port=None, debug=None, load_dotenv=True, **options):
         print('HIT HERE')
-
         super(ModelApp, self).run(host=host, port=port, debug=debug, load_dotenv=load_dotenv, **options)
 
 
@@ -88,22 +88,22 @@ def hello():
 # default goal_display is current time, at EST. takes in form input if posted
 def add_entry():
     if request.method == "GET":
-
         return render_template("addentry.html")
     else:
         global sent_model
         global w2v_model
+        global translate_client
         if not sent_model:
             sent_model = pickle.load(open('ml_code/model.sav', 'rb'))
             print('finished loading sentence model')
-
         if not w2v_model:
             w2v_model = pickle.load(open('ml_code/vectors.sav', 'rb'))
             print('finished loading w2v')
+        if not translate_client:
+            translate_client = translate.Client()
         journal = request.form.get("journal")
         bar = create_plot()
         sentiment=get_sentiment(journal)
-        
         datetimestamp=datetime.utcnow()
         entry = {"dtstamp":datetimestamp, "text":journal, "sentiment":sentiment, "hour":datetimestamp.strftime("%H "), "day":datetimestamp.strftime("%d "), "month":datetimestamp.strftime("%m "), "year":datetimestamp.strftime("%Y ")}
         global collection
@@ -114,7 +114,11 @@ def add_entry():
 def get_sentiment(entry):
     global w2v_model
     global sent_model
-    word_list = entry.split()
+    global translate_client
+    response = translate_client.translate(entry, target_language='en')
+    translation = response['translatedText']
+    print(translation)
+    word_list = translation.split()
     sentiment_list = []
     for word in word_list:
         lowercase_word = word.lower()
