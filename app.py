@@ -117,8 +117,9 @@ def get_sentiment(entry):
     word_list = entry.split()
     sentiment_list = []
     for word in word_list:
-        if word in w2v_model:
-            sentiment_list.append(w2v_model[word])
+        lowercase_word = word.lower()
+        if lowercase_word  in w2v_model:
+            sentiment_list.append(w2v_model[lowercase_word ])
     if len(sentiment_list) > 0:
     	vector_array = array(sentiment_list)
     	avg_sent = mean(vector_array, axis=0).reshape(1, -1)
