@@ -153,7 +153,7 @@ def create_plot():
         {'id': ids,
         'review': journals,
         'tag': tags,
-        'date':dates
+        'date': dates
         }
     )
 
@@ -182,20 +182,18 @@ def create_plot():
     )
     # graph option 2: polar barplot w/ binary height, color represents string length
     fig2 = px.bar_polar(
-        sample_df,
-        r=sample_df['tag'].map({-1:1, 1:2}),
-        theta=np.arange(0, 360, 360/sample_df['id'].count()),
-        color=sample_df['tag'],
-        color_continuous_scale=['purple', 'yellow'],
-        hover_name=sample_df['review'],
-        #hover_data=none
+        sample_df2,
+        r=sample_df2['average'].add(1),
+        theta=np.arange(0, 360, 360/24),
+        color=sample_df2['average'],
+        color_continuous_scale=['purple', 'yellow']
         )
     fig2.update_layout(
         title='World Mood',
         plot_bgcolor='rgb(10,10,10)',
         
         polar = dict(
-        radialaxis = dict(range=[0, 2.5], showticklabels=False, ticks=''),
+        radialaxis = dict(range=[0,2.5], showticklabels=False, ticks=''),
         angularaxis = dict(showticklabels=False, ticks='')
         )
     )
