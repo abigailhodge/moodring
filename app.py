@@ -82,24 +82,7 @@ def hello():
     print(todaysentiment)
     
     
-    #find the average of the past 12 hours
-    hraverage = []
-    now = datetime.utcnow()
-    for i in range(24):
-    	avrg = 0
-    	sum = 0
-    	entries = 0
-    	then = now - timedelta(hours=i)
-    	results = collection.find({"hour":then.strftime("%H "),"day":then.strftime("%d "),"month":then.strftime("%m "), "year":then.strftime("%Y ")})
-    	for result in results:
-    		sum += result["sentiment"]
-    		entries += 1
-    	if entries > 0:
-    		avrg = sum/entries
-    	else:
-    		avrg = 0
-    	hraverage.append([avrg])
-    print(hraverage)
+
     	
     	
     return render_template('index.html', plot=bar, arr_entries=arr_entries, index="active",entries="inactive", todaysentiment=todaysentiment)
@@ -155,17 +138,48 @@ def get_sentiment(entry):
     return int(result)
 
 
-sample_df = df = pd.DataFrame(
-    {'id': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
-    'review': ["mediocre", "not great", "wonderful", "best day ever to exist", "i am feeling sad", "hello", "another message", "hi", "this is the ninth message", "finally complete"],
-    'tag': [1, -1, -1, 1, 1, 1, -1, 1, 1, -1],
-    'date': ["YYYY-mm-ddTHH:MM:ss", "YYYY-mm-ddTHH:MM:ss", "YYYY-mm-ddTHH:MM:ss", "YYYY-mm-ddTHH:MM:ss", "YYYY-mm-ddTHH:MM:ss", "YYYY-mm-ddTHH:MM:ss", "YYYY-mm-ddTHH:MM:ss", "YYYY-mm-ddTHH:MM:ss", "YYYY-mm-ddTHH:MM:ss", "YYYY-mm-ddTHH:MM:ss"]
-    }
-)
-
 def create_plot():
-    
+    global collection
+    results = collection.find({})
+    journals = []
+    tags = []
+    dates = []
+    for r in results:
+        journals.append(r["text"])
+        dates.append(r['day'])
+        tags.append(r['sentiment'])
+    ids = range(1,len(journals)+1)
+    sample_df = df = pd.DataFrame(
+        {'id': ids,
+        'review': journals,
+        'tag': tags,
+        'date':dates
+        }
+    )
 
+    hraverage = []
+    now = datetime.utcnow()
+    for i in range(24):
+    	avrg = 0
+    	sum = 0
+    	entries = 0
+    	then = now - timedelta(hours=i)
+    	results = collection.find({"hour":then.strftime("%H "),"day":then.strftime("%d "),"month":then.strftime("%m "), "year":then.strftime("%Y ")})
+    	for result in results:
+    		sum += result["sentiment"]
+    		entries += 1
+    	if entries > 0:
+    		avrg = sum/entries
+    	else:
+    		avrg = 0
+    	hraverage.append(avrg)
+    print(hraverage)
+    avg_ids = range(24,0,-1)
+    sample_df2 = df2 = pd.DataFrame(
+        {'id': avg_ids,
+        'average':hraverage
+        }
+    )
     # graph option 2: polar barplot w/ binary height, color represents string length
     fig2 = px.bar_polar(
         sample_df,
