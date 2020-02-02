@@ -104,7 +104,7 @@ def add_entry():
         entry = {"date":datetimestamp, "text":journal, "sentiment":sentiment, "day":datetimestamp.strftime("%d %b %Y " )}
         global collection
         collection.insert_one(entry)
-        return render_template("index.html", plot=bar)
+        return redirect("/")
 
 
 def get_sentiment(entry):
