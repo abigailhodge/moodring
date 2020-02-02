@@ -72,14 +72,16 @@ def hello():
             arr_entries.append(JournalEntry(i, j, k))
     
     #find the average of past day's sentiment
-    sum =  0
-    entries = 1
+    sum = entries = 0
     datetimestamp=datetime.utcnow()
     results = collection.find({"day":datetimestamp.strftime("%d %b %Y ")})
     for result in results:
     		sum += result["sentiment"]
     		entries += 1
-    todaysentiment = sum/(entries-1)
+    if entries > 0:
+    	todaysentiment = sum/(entries-1)
+    else:
+    	todaysentiment = 0
     print(todaysentiment)
     
     return render_template('index.html', plot=bar, arr_entries=arr_entries, index="active",entries="inactive", todaysentiment=todaysentiment)
