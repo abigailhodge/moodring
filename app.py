@@ -61,8 +61,8 @@ def hello():
     arr_entries = []
     global collection
 
-    for result in collection.find({}).sort("date",-1):
-        i = result["date"]
+    for result in collection.find({}).sort("dtstamp",-1):
+        i = result["dtstamp"]
         j = result["text"]
         k = result["sentiment"]
         arr_entries.append([i, j, k])
@@ -70,7 +70,7 @@ def hello():
     #find the average of past day's sentiment
     sum = entries = 0
     datetimestamp=datetime.utcnow()
-    results = collection.find({"day":datetimestamp.strftime("%d %b %Y ")})
+    results = collection.find({"day":datetimestamp.strftime("%d "),"month":datetimestamp.strftime("%m "), "year":datetimestamp.strftime("%Y ")})
     for result in results:
     		sum += result["sentiment"]
     		entries += 1
@@ -105,7 +105,7 @@ def add_entry():
         sentiment=get_sentiment(journal)
         
         datetimestamp=datetime.utcnow()
-        entry = {"date":datetimestamp, "text":journal, "sentiment":sentiment, "day":datetimestamp.strftime("%d %b %Y " )}
+        entry = {"dtstamp":datetimestamp, "text":journal, "sentiment":sentiment, "hour":datetimestamp.strftime("%H "), "day":datetimestamp.strftime("%d "), "month":datetimestamp.strftime("%m "), "year":datetimestamp.strftime("%Y ")}
         global collection
         collection.insert_one(entry)
         return redirect("/")
