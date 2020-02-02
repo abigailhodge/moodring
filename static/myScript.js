@@ -13,3 +13,5 @@ function charLeft(val, maxLength) {
 // 	node.appendChild(textnode);
 // 	document.getElementById("recent-entries").appendChild(node);
 // }
+
+

@@ -3,7 +3,7 @@ from flask import Flask, render_template, redirect, request, session
 from gensim.models import KeyedVectors
 from numpy import array, mean
 import pickle
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 from flask_pymongo import PyMongo
 from pymongo import MongoClient
 import os
@@ -62,15 +62,27 @@ app.config["TEMPLATES_AUTO_RELOAD"]
 def hello():
     bar = create_plot()
     
+	#create array of previous entries newest to oldest
     arr_entries = []
     global collection
-
     for result in collection.find({}).sort("date",-1):
             i = result['date']
             j = result["text"]
             k = result["sentiment"]
             arr_entries.append(JournalEntry(i, j, k))
-    return render_template('index.html', plot=bar, arr_entries=arr_entries)
+    
+    #find the average of past day's sentiment
+    sum =  0
+    entries = 1
+    datetimestamp=datetime.utcnow()
+    results = collection.find({"day":datetimestamp.strftime("%d %b %Y ")})
+    for result in results:
+    		sum += result["sentiment"]
+    		entries += 1
+    todaysentiment = sum/(entries-1)
+    print(todaysentiment)
+    
+    return render_template('index.html', plot=bar, arr_entries=arr_entries, index="active",entries="inactive", todaysentiment=todaysentiment)
 
 
 @app.route("/add_entry", methods=["GET", "POST"])
@@ -85,7 +97,8 @@ def add_entry():
         bar = create_plot()
         sentiment=get_sentiment(journal)
         
-        entry = {"date":datetime.utcnow(), "text":journal, "sentiment":sentiment}
+        datetimestamp=datetime.utcnow()
+        entry = {"date":datetimestamp, "text":journal, "sentiment":sentiment, "day":datetimestamp.strftime("%d %b %Y " )}
         global collection
         collection.insert_one(entry)
         return render_template("index.html", plot=bar)
