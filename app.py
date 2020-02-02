@@ -80,10 +80,6 @@ def hello():
     else:
     	todaysentiment = 0
     print(todaysentiment)
-    
-    
-
-    	
     	
     return render_template('index.html', plot=bar, arr_entries=arr_entries, index="active",entries="inactive", todaysentiment=todaysentiment)
 
@@ -100,20 +96,17 @@ def add_entry():
         global translate_client
         if not sent_model:
             sent_model = pickle.load(open('ml_code/model.sav', 'rb'))
-            print('finished loading sentence model')
         if not w2v_model:
             w2v_model = pickle.load(open('ml_code/vectors.sav', 'rb'))
-            print('finished loading w2v')
         if not translate_client:
             translate_client = translate.Client()
         journal = request.form.get("journal")
-        bar = create_plot()
         sentiment=get_sentiment(journal)
         datetimestamp=datetime.utcnow()
         entry = {"dtstamp":datetimestamp, "text":journal, "sentiment":sentiment, "hour":datetimestamp.strftime("%H "), "day":datetimestamp.strftime("%d "), "month":datetimestamp.strftime("%m "), "year":datetimestamp.strftime("%Y ")}
         global collection
         collection.insert_one(entry)
-        return redirect("/")
+        return render_template("addentry.html")
 
 
 def get_sentiment(entry):
@@ -122,13 +115,12 @@ def get_sentiment(entry):
     global translate_client
     response = translate_client.translate(entry, target_language='en')
     translation = response['translatedText']
-    print(translation)
     word_list = translation.split()
     sentiment_list = []
     for word in word_list:
         lowercase_word = word.lower()
-        if lowercase_word  in w2v_model:
-            sentiment_list.append(w2v_model[lowercase_word ])
+        if lowercase_word in w2v_model:
+            sentiment_list.append(w2v_model[lowercase_word])
     if len(sentiment_list) > 0:
     	vector_array = array(sentiment_list)
     	avg_sent = mean(vector_array, axis=0).reshape(1, -1)
