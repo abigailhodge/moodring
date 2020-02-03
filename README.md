@@ -1,17 +1,18 @@
 # moodring
 Moodring app for TechTogether Boston 2020
+
 Winner of the Facebook Building Community Challenge
 
 ## TEAM MEMBERS
-Abigail Hodge
+[Abigail Hodge](https://www.github.com/abigailhodge)
 
-Megan Li
+[Megan Li](https://www.github.com/megandouli)
 
-Jacqueline Lincroft
+[Jacqueline Lincroft](https://www.github.com/jackielincroft)
 
-[Vanessa Hu]("https://github.com/vanessa-hu")
+[Vanessa Hu](https://www.github.com/vanessa-hu)
 
-Sarah Bluhm
+[Sarah Bluhm](https://www.github.com/sjh-bluhm)
 
 ## Inspiration
 In an age of often isolating social media profiles, it can be easy to forget how our feelings and attitudes impact the world around us, and how others are more similar to us than we realize. moodring pools together the sentiment of the anonymous thoughts of everyone who uses it—no matter their language—to create a visual representation of the world’s honest emotions over the course of a day. 
