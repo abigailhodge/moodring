@@ -1,5 +1,6 @@
 # moodring
 Moodring app for TechTogether Boston 2020
+Winner of the Facebook Building Community Challenge
 
 ## TEAM MEMBERS
 Abigail Hodge
@@ -8,7 +9,7 @@ Megan Li
 
 Jacqueline Lincroft
 
-<a href="github.com/vanessa-hu">Vanessa Hu</a>
+[Vanessa Hu]("https://github.com/vanessa-hu")
 
 Sarah Bluhm
 
