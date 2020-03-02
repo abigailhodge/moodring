@@ -160,20 +160,23 @@ def create_plot():
         color_continuous_scale=["#352961", "#be9fe1", "#fdd365"],
         range_color=[-1, 1],
         )
+    fig2.update(layout_coloraxis_showscale=False)
     fig2.update_layout(
-        title='World Mood',
-        plot_bgcolor='rgb(10,10,10)',
-        
+        #title='World Mood',
+        width=500,
+        height=500,
+        paper_bgcolor='rgba(0,0,0,0)',
+        plot_bgcolor='rgba(0,0,0,0)',
         polar = dict(
             radialaxis = dict(range=[0.5,2.2], showticklabels=False, ticks=''),
             angularaxis = dict(showticklabels=False, ticks='')
         ),
-        coloraxis=dict(
-            colorbar=dict(
-                title='Average Hourly Sentiment',
-                tickmode='array',
-                tickvals=[-1, 0, 1],
-                ticktext=['-1: negative', '0: neutral', '1: positive']))
+        #coloraxis=dict(
+            #colorbar=dict(
+                #title='Average Hourly Sentiment',
+                #tickmode='array',
+                #tickvals=[-1, 0, 1],
+                #ticktext=['-1: negative', '0: neutral', '1: positive']))
     )
 
     graphJSON = json.dumps(fig2, cls=plotly.utils.PlotlyJSONEncoder)
