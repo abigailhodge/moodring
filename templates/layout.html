@@ -18,6 +18,8 @@
 
 	
 </head>
+
+{% set active_page = active_page -%}
 <body>
 	<div class="header mt-4">
 		<h1>Mood Ring</h1>
@@ -28,10 +30,10 @@
 			<div class="collapse navbar-collapse justify-content-center" id="collapsibleNavbar">
 				<ul class="navbar-nav">
 					<li class="nav-item">
-						<a class="nav-link active" href="/" id={{ index }}>World Mood</a>
+						<a {% if 'index' == active_page %} class="nav-link active" {% else %} class = "nav-link" {% endif %} href="/" }>World Mood</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link" href="/add_entry" id ={{ entries }}>Add Your Entry</a>
+						<a {% if 'entries' == active_page %} class="nav-link active" {% else %} class = "nav-link" {% endif %} href="/add_entry" }>Add Your Entry</a>
 					</li> 
 				</ul>
 			</div>  
